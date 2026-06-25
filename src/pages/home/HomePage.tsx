@@ -1,15 +1,13 @@
-import CTA from "@/components/landing/CTA";
 import Features from "@/components/landing/Features";
 import Hero from "@/components/landing/Hero";
-import Trusted from "@/components/landing/Trusted";
+import Testimonials from "@/components/landing/Testimonials";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <Trusted />
       <Features />
-      <CTA />
+      <Testimonials />
     </>
   );
 }
