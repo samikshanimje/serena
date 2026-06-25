@@ -15,9 +15,17 @@ export default function Navbar() {
             <a href="#">Contact</a>
           </div>
   
-          <button className="rounded-full bg-violet-600 px-6 py-3 text-white transition hover:bg-violet-700">
-            Login
-          </button>
+          <div className="flex gap-4">
+
+<button className="rounded-full px-5 py-2">
+Login
+</button>
+
+<button className="rounded-full bg-violet-600 px-6 py-3 text-white">
+Sign Up
+</button>
+
+</div>
   
         </div>
       </nav>
