@@ -4,6 +4,9 @@ import express from "express";
 import connectDB from "./config/db.js";
 import authMiddleware from "./middleware/authMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
+import moodRoutes from "./routes/moodRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import journalRoutes from "./routes/journalRoutes.js";
 
 dotenv.config();
 console.log(process.env.MONGO_URI);
@@ -22,6 +25,7 @@ app.get("/api/profile", authMiddleware, (req, res) => {
       user: req.user,
     });
   });
+app.use("/api/moods", moodRoutes);
 
 app.get("/", (req, res) => {
   res.json({
@@ -29,6 +33,11 @@ app.get("/", (req, res) => {
     message: "🌸 Serena Backend Running",
   });
 });
+app.use("/api/chat", chatRoutes);
+app.use("/api/journals", journalRoutes);
+
+
+
 
 const PORT = process.env.PORT || 8000;
 

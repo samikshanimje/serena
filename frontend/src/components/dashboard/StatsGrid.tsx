@@ -1,26 +1,28 @@
 import { Droplets, Flame, PenLine, Smile } from "lucide-react";
 import StatCard from "./StatCard";
 
+const MOOD_EMOJI: Record<string, string> = {
+  Happy: "😊", Sad: "😢", Anxious: "😰", Calm: "😌",
+  Angry: "😤", Excited: "🤩", Tired: "😴", Neutral: "😐",
+};
+
 interface Props {
-  latestMood?: {
-    mood: string;
-    note: string;
-  } | null;
+  latestMood?: { mood: string; note: string } | null;
 }
 
 export default function StatsGrid({ latestMood }: Props) {
+  const moodEmoji = latestMood?.mood ? (MOOD_EMOJI[latestMood.mood] ?? "🙂") : null;
+
   const STATS = [
     {
-      title: "Mood Today",
-      value: latestMood ? latestMood.mood : "No Mood",
-      subtitle: latestMood
-        ? latestMood.note
-        : "Log today's mood",
+      title: "Today's Mood",
+      value: latestMood ? `${moodEmoji} ${latestMood.mood}` : "—",
+      subtitle: latestMood?.note || "Log your mood to start",
       icon: Smile,
       iconBg: "bg-amber-50",
       iconColor: "text-amber-500",
-      trend: latestMood ? "Today's Entry" : "No Data",
-      trendPositive: true,
+      trend: latestMood ? "Logged" : "Pending",
+      trendPositive: !!latestMood,
     },
     {
       title: "Current Streak",
@@ -45,7 +47,7 @@ export default function StatsGrid({ latestMood }: Props) {
     {
       title: "Water Intake",
       value: "1.8 L",
-      subtitle: "Goal: 2.5 L today",
+      subtitle: "Goal: 2.5 L",
       icon: Droplets,
       iconBg: "bg-sky-50",
       iconColor: "text-sky-500",
@@ -57,11 +59,7 @@ export default function StatsGrid({ latestMood }: Props) {
   return (
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
       {STATS.map((stat, i) => (
-        <StatCard
-          key={stat.title}
-          {...stat}
-          delay={0.1 + i * 0.07}
-        />
+        <StatCard key={stat.title} {...stat} delay={0.1 + i * 0.07} />
       ))}
     </div>
   );

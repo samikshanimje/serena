@@ -1,11 +1,90 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sora:wght@300;400;500;600;700;800&display=swap");
 
 @import "tailwindcss";
 
-body{
-    font-family: "Inter", sans-serif;
+/* ── Design Tokens ── */
+:root {
+  --violet-50: #f5f3ff;
+  --violet-100: #ede9fe;
+  --violet-500: #8b5cf6;
+  --violet-600: #7c3aed;
+  --pink-accent: #f9a8d4;
+  --surface: #ffffff;
+  --surface-2: #fafafa;
+  --border: #e8e4f0;
+  --text-primary: #0f0a1e;
+  --text-secondary: #6b7280;
+  --radius-card: 24px;
 }
 
-h1,h2,h3,h4,h5,h6{
-    font-family: "Poppins", sans-serif;
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--surface-2);
+  color: var(--text-primary);
+  margin: 0;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Sora", sans-serif;
+  letter-spacing: -0.025em;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d8b4fe; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #a78bfa; }
+
+/* ── Selection ── */
+::selection { background: #ddd6fe; color: #4c1d95; }
+
+/* ── Focus ring ── */
+:focus-visible { outline: 2px solid #8b5cf6; outline-offset: 2px; border-radius: 6px; }
+
+/* ── Glass card utility ── */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.glass-dark {
+  background: rgba(15, 10, 30, 0.65);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Ambient glow ── */
+.glow-violet {
+  box-shadow: 0 0 40px -8px rgba(139, 92, 246, 0.45);
+}
+.glow-pink {
+  box-shadow: 0 0 40px -8px rgba(236, 72, 153, 0.3);
+}
+
+/* ── Chat message prose ── */
+.prose-chat p { margin: 0 0 0.5em; }
+.prose-chat p:last-child { margin-bottom: 0; }
+.prose-chat code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.85em;
+  background: rgba(139,92,246,0.1);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.prose-chat strong { font-weight: 600; }
