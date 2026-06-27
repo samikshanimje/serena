@@ -1,5 +1,5 @@
 import Chat from "../models/Chat.js";
-import { generateResponse } from "../services/geminiService.js";
+import { generateChatResponse } from "../services/geminiService.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -13,7 +13,7 @@ export const sendMessage = async (req, res) => {
     });
 
     // Get AI reply
-    const aiReply = await generateResponse(message);
+    const aiReply = await generateChatResponse(message);
 
     // Save AI reply
     await Chat.create({

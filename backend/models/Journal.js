@@ -7,17 +7,31 @@ const journalSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
     title: {
       type: String,
       required: true,
     },
+
     content: {
       type: String,
       required: true,
     },
+
     mood: {
       type: String,
       default: "",
+    },
+
+    aiAnalysis: {
+      emotion: String,
+      stress: Number,
+      gratitude: Number,
+      confidence: Number,
+      summary: String,
+      recommendation: String,
+      positiveMoments: [String],
+      concerns: [String],
     },
   },
   {
