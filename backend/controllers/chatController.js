@@ -1,5 +1,6 @@
 import Chat from "../models/Chat.js";
 import Journal from "../models/Journal.js";
+import Mood from "../models/Mood.js";
 import { generateChatResponse } from "../services/geminiService.js";
 
 export const sendMessage = async (req, res) => {
@@ -17,6 +18,15 @@ export const sendMessage = async (req, res) => {
     })
       .sort({ createdAt: -1 })
       .limit(5);
+
+
+      const recentMoods = await Mood.find({
+        user: req.user.id,
+      })
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+
     // Get AI reply
     const journalContext = recentJournals
   .map(
@@ -27,17 +37,34 @@ Summary: ${j.aiAnalysis?.summary || j.content}`
   )
   .join("\n\n");
 
-const prompt = `
-Previous Journal History:
+  const moodContext = recentMoods
+  .map(
+    (m) =>
+      `${m.createdAt.toDateString()} - Mood: ${m.mood}${
+        m.note ? ` | Note: ${m.note}` : ""
+      }`
+  )
+  .join("\n");
 
-${journalContext}
-
-Current User Message:
-
-${message}
-
-Respond naturally while considering the user's previous journals whenever relevant.
-`;
+  const prompt = `
+  User Mood History:
+  
+  ${moodContext}
+  
+  User Journal History:
+  
+  ${journalContext}
+  
+  Current User Message:
+  
+  ${message}
+  
+  Answer naturally.
+  
+  Use BOTH the mood history and journal history whenever relevant.
+  
+  If you make recommendations, explain WHY based on the user's history.
+  `;
 
 const aiReply = await generateChatResponse(prompt);
 
