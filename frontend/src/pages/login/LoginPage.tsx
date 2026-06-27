@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, ArrowRight, Sparkles, AlertCircle, Loader2 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -231,6 +233,32 @@ export default function LoginPage() {
               )}
             </motion.button>
           </motion.form>
+
+
+          <div className="mb-6 flex justify-center">
+  <GoogleLogin
+    onSuccess={async (credentialResponse) => {
+      try {
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/auth/google`,
+          {
+            credential: credentialResponse.credential,
+          }
+        );
+
+        googleLogin(res.data.token, res.data.user);
+
+        navigate("/dashboard");
+      } catch (err) {
+        console.error(err);
+        setError("Google login failed.");
+      }
+    }}
+    onError={() => {
+      setError("Google login failed.");
+    }}
+  />
+</div>
 
           {/* Divider */}
           <div className="flex items-center gap-4 my-8">

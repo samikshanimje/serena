@@ -1,15 +1,15 @@
 import {
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-  } from "react";
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
   
   import {
-    loginUser,
-    registerUser,
-    getProfile,
-  } from "../services/authService";
+  getProfile,
+  loginUser,
+  registerUser,
+} from "../services/authService";
   
   type User = {
     _id: string;
@@ -21,6 +21,8 @@ import {
     user: User | null;
     token: string | null;
     login: (email: string, password: string) => Promise<void>;
+    googleLogin: (token: string, user: User) => void;
+    
     register: (
       name: string,
       email: string,
@@ -85,6 +87,14 @@ import {
       setUser(res.data.user);
     };
   
+    const googleLogin = (token: string, user: User) => {
+      localStorage.setItem("token", token);
+    
+      setToken(token);
+    
+      setUser(user);
+    };
+    
     const register = async (
       name: string,
       email: string,
@@ -111,6 +121,7 @@ import {
           user,
           token,
           login,
+          googleLogin,
           register,
           logout,
           loading,
