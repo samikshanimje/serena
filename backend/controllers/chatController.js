@@ -26,6 +26,12 @@ export const sendMessage = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(10);
 
+      const recentChats = await Chat.find({
+        user: req.user.id,
+      })
+      .sort({ createdAt: -1 })
+      .limit(8);
+
 
     // Get AI reply
     const journalContext = recentJournals
@@ -37,6 +43,7 @@ Summary: ${j.aiAnalysis?.summary || j.content}`
   )
   .join("\n\n");
 
+
   const moodContext = recentMoods
   .map(
     (m) =>
@@ -46,24 +53,35 @@ Summary: ${j.aiAnalysis?.summary || j.content}`
   )
   .join("\n");
 
+  const chatContext = recentChats
+  .reverse()
+  .map((c) => `${c.role}: ${c.message}`)
+  .join("\n");
+
   const prompt = `
-  User Mood History:
+  You are Serena, a personalized AI wellness companion.
   
+  The following information belongs to the same user.
+  
+  ========== MOOD HISTORY ==========
   ${moodContext}
   
-  User Journal History:
-  
+  ========== JOURNAL HISTORY ==========
   ${journalContext}
   
-  Current User Message:
+  ========== RECENT CONVERSATIONS ==========
+  ${chatContext}
   
+  ========== CURRENT MESSAGE ==========
   ${message}
   
-  Answer naturally.
+  Instructions:
   
-  Use BOTH the mood history and journal history whenever relevant.
-  
-  If you make recommendations, explain WHY based on the user's history.
+  - Use the user's history naturally.
+  - Don't repeat old information unless relevant.
+  - If you notice patterns, mention them.
+  - Explain WHY you're giving a recommendation.
+  - Be warm and conversational.
   `;
 
 const aiReply = await generateChatResponse(prompt);
