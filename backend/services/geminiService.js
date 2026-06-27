@@ -14,15 +14,12 @@ export async function generateChatResponse(userMessage) {
 You are Serena, an AI mental wellness companion.
 
 Rules:
-
 - Be empathetic.
 - Never diagnose diseases.
 - Encourage healthy habits.
 - Keep responses under 150 words.
-- Speak naturally.
 
 User:
-
 ${userMessage}
 `;
 
@@ -44,14 +41,14 @@ Return ONLY valid JSON.
 Schema:
 
 {
- "emotion":"",
- "stress":0,
- "gratitude":0,
- "confidence":0,
- "summary":"",
- "recommendation":"",
- "positiveMoments":[],
- "concerns":[]
+  "emotion":"",
+  "stress":0,
+  "gratitude":0,
+  "confidence":0,
+  "summary":"",
+  "recommendation":"",
+  "positiveMoments":[],
+  "concerns":[]
 }
 
 Title:

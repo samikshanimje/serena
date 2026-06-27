@@ -1,4 +1,5 @@
 import Chat from "../models/Chat.js";
+import Journal from "../models/Journal.js";
 import { generateChatResponse } from "../services/geminiService.js";
 
 export const sendMessage = async (req, res) => {
@@ -11,9 +12,34 @@ export const sendMessage = async (req, res) => {
       role: "user",
       message,
     });
-
+    const recentJournals = await Journal.find({
+      user: req.user.id,
+    })
+      .sort({ createdAt: -1 })
+      .limit(5);
     // Get AI reply
-    const aiReply = await generateChatResponse(message);
+    const journalContext = recentJournals
+  .map(
+    (j) =>
+      `Title: ${j.title}
+Mood: ${j.mood}
+Summary: ${j.aiAnalysis?.summary || j.content}`
+  )
+  .join("\n\n");
+
+const prompt = `
+Previous Journal History:
+
+${journalContext}
+
+Current User Message:
+
+${message}
+
+Respond naturally while considering the user's previous journals whenever relevant.
+`;
+
+const aiReply = await generateChatResponse(prompt);
 
     // Save AI reply
     await Chat.create({

@@ -2,9 +2,9 @@ import express from "express";
 
 import {
   addMood,
-  getMoods,
-  getLatestMood,
   deleteMood,
+  getLatestMood,
+  getMoods,
 } from "../controllers/moodController.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";

@@ -1,13 +1,30 @@
 import Journal from "../models/Journal.js";
 
+
+import { analyzeJournalWithAI } from "../services/geminiService.js";
+
 export const createJournal = async (req, res) => {
   try {
+    const { title, content, mood } = req.body;
+
+    // Save journal first
     const journal = await Journal.create({
       user: req.user.id,
-      title: req.body.title,
-      content: req.body.content,
-      mood: req.body.mood,
+      title,
+      content,
+      mood,
     });
+
+    // Generate AI insights
+    try {
+      const analysis = await analyzeJournalWithAI(title, content);
+
+      journal.aiAnalysis = analysis;
+
+      await journal.save();
+    } catch (aiError) {
+      console.log("AI Analysis Failed:", aiError.message);
+    }
 
     res.status(201).json({
       success: true,
