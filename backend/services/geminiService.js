@@ -85,3 +85,51 @@ ${content}
 
   return JSON.parse(text);
 }
+
+export async function generateChatTitle(firstMessage) {
+  const prompt = `
+Generate a very short conversation title (3-6 words).
+
+Only return the title.
+
+Message:
+
+${firstMessage}
+`;
+
+  const result = await model.generateContent(prompt);
+
+  return result.response.text().trim();
+}
+
+export async function detectRisk(message) {
+  const prompt = `
+Analyze the following message.
+
+Return ONLY JSON.
+
+{
+  "risk":"low",
+  "reason":""
+}
+
+Risk levels:
+- low
+- medium
+- high
+
+Message:
+
+${message}
+`;
+
+  const result = await model.generateContent(prompt);
+
+  const text = result.response
+    .text()
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+
+  return JSON.parse(text);
+}

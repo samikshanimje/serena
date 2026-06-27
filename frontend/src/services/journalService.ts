@@ -6,9 +6,21 @@ export interface JournalEntry {
   title: string;
   content: string;
   mood?: string;
-  tags: string[];
-  pinned: boolean;
-  favorite: boolean;
+
+  tags?: string[];
+  pinned?: boolean;
+  favorite?: boolean;
+
+  aiAnalysis?: {
+    emotion: string;
+    stress: number;
+    confidence: number;
+    summary: string;
+    recommendation: string;
+    positiveMoments: string[];
+    concerns: string[];
+  };
+
   createdAt: string;
   updatedAt: string;
 }
@@ -45,3 +57,10 @@ export const deleteJournal = (id: string, token: string) =>
   api.delete(`/journals/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+  export const getLatestJournal = (token: string) =>
+    api.get("/journals/latest", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });

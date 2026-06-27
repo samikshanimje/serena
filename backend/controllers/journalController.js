@@ -55,3 +55,22 @@ export const getJournals = async (req, res) => {
     });
   }
 };
+
+export const getLatestJournal = async (req, res) => {
+  try {
+    const journal = await Journal.findOne({
+      user: req.user.id,
+    }).sort({
+      createdAt: -1,
+    });
+
+    res.json({
+      success: true,
+      journal,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};

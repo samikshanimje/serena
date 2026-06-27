@@ -1,11 +1,15 @@
 import Chat from "../models/Chat.js";
 import Journal from "../models/Journal.js";
 import Mood from "../models/Mood.js";
-import { generateChatResponse } from "../services/geminiService.js";
+import {
+  generateChatResponse,
+  detectRisk,
+} from "../services/geminiService.js";
 
 export const sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
+    const risk = await detectRisk(message);
 
     // Save user's message
     await Chat.create({
@@ -83,7 +87,15 @@ Summary: ${j.aiAnalysis?.summary || j.content}`
   - Explain WHY you're giving a recommendation.
   - Be warm and conversational.
   `;
-
+  if (risk.risk === "high") {
+    return res.json({
+      success: true,
+      emergency: true,
+      reply:
+        "I'm really sorry you're going through such a difficult time. You don't have to face it alone. Please consider reaching out to someone you trust, such as a close friend, family member, or a qualified mental health professional. I'm here to listen, but I can't provide the help that a trained person can in a crisis.",
+      risk,
+    });
+  }
 const aiReply = await generateChatResponse(prompt);
 
     // Save AI reply

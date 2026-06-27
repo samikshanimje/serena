@@ -48,12 +48,33 @@ Recommendations
 Action Plan
 `;
 
-    const report = await generateChatResponse(prompt);
-
-    res.json({
-      success: true,
-      report,
-    });
+const report = await generateChatResponse(
+    prompt +
+    `
+  
+  Return ONLY valid JSON.
+  
+  {
+    "moodSummary":"",
+    "journalSummary":"",
+    "achievements":[],
+    "stressTriggers":[],
+    "positiveHabits":[],
+    "recommendations":[],
+    "actionPlan":""
+  }
+  `
+  );
+  
+  const clean = report
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+  
+  res.json({
+    success: true,
+    report: JSON.parse(clean),
+  });
 
   } catch (err) {
     res.status(500).json({

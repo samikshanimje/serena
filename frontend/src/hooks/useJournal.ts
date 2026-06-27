@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  getJournals,
   createJournal,
-  updateJournal,
   deleteJournal,
+  getJournals,
+  getLatestJournal,
+  updateJournal
 } from "../services/journalService";
 
 import type { JournalEntry } from "../services/journalService";
 
 export default function useJournal(token: string | null) {
   const [journals, setJournals]   = useState<JournalEntry[]>([]);
+  const [latestJournal, setLatestJournal] = useState<JournalEntry | null>(null);
   const [loading,  setLoading]    = useState(true);
   const [saving,   setSaving]     = useState(false);
   const [error,    setError]      = useState<string | null>(null);
@@ -21,6 +23,9 @@ export default function useJournal(token: string | null) {
       setLoading(true);
       const res = await getJournals(token);
       setJournals(res.data.journals ?? []);
+
+      const latest = await getLatestJournal(token);
+      setLatestJournal(latest.data.journal);
     } catch (err) {
       console.error(err);
       setError("Failed to load journals.");
@@ -89,14 +94,15 @@ export default function useJournal(token: string | null) {
     [token]
   );
 
-  return {
-    journals,
-    loading,
-    saving,
-    error,
-    refetch: fetchJournals,
-    addJournal,
-    editJournal,
-    removeJournal,
-  };
+return {
+  journals,
+  latestJournal,
+  loading,
+  saving,
+  error,
+  refetch: fetchJournals,
+  addJournal,
+  editJournal,
+  removeJournal,
+};
 }
