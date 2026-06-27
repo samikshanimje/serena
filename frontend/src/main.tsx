@@ -5,6 +5,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
+console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
 ReactDOM.createRoot(
   document.getElementById("root")!
