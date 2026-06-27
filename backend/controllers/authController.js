@@ -86,6 +86,9 @@ export const googleLogin = async (req, res) => {
   try {
     const { credential } = req.body;
 
+    console.log("Credential received:", !!credential);
+    console.log("Google Client ID:", process.env.GOOGLE_CLIENT_ID);
+
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -127,9 +130,11 @@ export const googleLogin = async (req, res) => {
     });
 
   } catch (err) {
+    console.error("GOOGLE LOGIN ERROR:", err);
+  
     res.status(401).json({
       success: false,
-      message: "Google login failed",
+      message: err.message,
     });
   }
 };
