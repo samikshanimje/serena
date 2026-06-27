@@ -151,8 +151,8 @@ export default function MoodCalendar({ moods }: Props) {
                     className="absolute bottom-full mb-2 z-20 whitespace-nowrap rounded-2xl bg-slate-900 px-3 py-2 text-white shadow-xl"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-base">{MOOD_EMOJI[tooltip.mood.mood] ?? "🙂"}</span>
-                      <span className="text-xs font-semibold">{tooltip.mood.mood}</span>
+                      <span className="text-base">{MOOD_EMOJI[tooltip?.mood.mood ?? ""] ?? "🙂"}</span>
+                      <span className="text-xs font-semibold">{tooltip?.mood.mood}</span>
                     </div>
                     <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
                   </motion.div>

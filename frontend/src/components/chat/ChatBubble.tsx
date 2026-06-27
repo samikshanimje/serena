@@ -30,7 +30,7 @@ function renderMessage(text: string) {
     });
 }
 
-export default function ChatBubble({ role, message, timestamp, isLatest }: Props) {
+export default function ChatBubble({ role, message, timestamp }: Props) {
   const isUser = role === "user";
   const [copied, setCopied] = useState(false);
 

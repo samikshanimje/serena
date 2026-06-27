@@ -11,10 +11,19 @@ import MoodTimeline from "../../components/mood/MoodTimeline";
 import { useAuth } from "../../context/AuthContext";
 import useMood from "../../hooks/useMood";
 
-const fadeUp = (delay = 0) => ({
+
+import type { HTMLMotionProps } from "framer-motion";
+
+const fadeUp = (
+  delay = 0
+): Pick<HTMLMotionProps<"div">, "initial" | "animate" | "transition"> => ({
   initial: { opacity: 0, y: 22 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] },
+  transition: {
+    duration: 0.5,
+    delay,
+    ease: [0.16, 1, 0.3, 1] as const,
+  },
 });
 
 export default function MoodPage() {

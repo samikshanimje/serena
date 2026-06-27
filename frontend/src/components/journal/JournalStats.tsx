@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { PenLine, Flame, Hash, TrendingUp } from "lucide-react";
-import { JournalEntry } from "../../services/journalService";
+import type { JournalEntry } from "../../services/journalService";
 
 function useCounter(target: number, delay = 0) {
   const [val, setVal] = useState(0);

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Feather, Tag, X, Check, Loader2, Hash, SmilePlus,
+  Feather, X, Check, Loader2, Hash, SmilePlus,
 } from "lucide-react";
-import { JournalEntry } from "../../services/journalService";
+import type { JournalEntry } from "../../services/journalService";
 
 const MOODS = [
   { value: "Amazing",  emoji: "😄" },

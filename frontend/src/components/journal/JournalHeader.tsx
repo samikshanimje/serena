@@ -32,7 +32,6 @@ interface Props {
 }
 
 export default function JournalHeader({
-  userName = "Samiksha",
   streak = 0,
   totalEntries = 0,
   currentMood,
@@ -42,9 +41,6 @@ export default function JournalHeader({
   const quote = QUOTES[new Date().getDay() % QUOTES.length];
   const moodMeta = currentMood ? MOOD_META[currentMood] : null;
 
-  const dayOfYear = Math.floor(
-    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
-  );
 
   const DATE_STR = new Intl.DateTimeFormat("en-US", {
     weekday: "long", month: "long", day: "numeric",

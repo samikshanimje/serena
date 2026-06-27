@@ -164,9 +164,9 @@ export default function JournalCard({ entry, onEdit, onDelete, onPin, onFavorite
       </p>
 
       {/* Tags */}
-      {entry.tags?.length > 0 && (
+      {(entry.tags ?? []).length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-4">
-          {entry.tags.map((tag) => (
+          {(entry.tags ?? []).map((tag) => (
             <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600">
               <Tag size={9} />{tag}
             </span>

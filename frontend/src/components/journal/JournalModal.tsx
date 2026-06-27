@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import JournalEditor from "./JournalEditor";
-import { JournalEntry } from "../../services/journalService";
+import type { JournalEntry } from "../../services/journalService";
 
 interface Props {
   open: boolean;

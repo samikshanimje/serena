@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { JournalEntry } from "../../services/journalService";
+import type { JournalEntry } from "../../services/journalService";
 import JournalCard from "./JournalCard";
 
 function groupByDate(entries: JournalEntry[]) {

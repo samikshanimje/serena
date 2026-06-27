@@ -7,13 +7,19 @@ import useJournal from "@/hooks/useJournal";
 import useMood from "../../hooks/useMood";
 
 import JournalEmptyState from "@/components/journal/JournalEmptyState";
-import JournalFilters from "@/components/journal/JournalFilters";
+//import JournalFilters from "@/components/journal/JournalFilters";
+import JournalFilters, {
+  type FilterState,
+} from "../../components/journal/JournalFilters";
 import JournalHeader from "@/components/journal/JournalHeader";
 import JournalInsightCard from "@/components/journal/JournalInsightCard";
 import JournalModal from "@/components/journal/JournalModal";
 import JournalStats from "@/components/journal/JournalStats";
 import JournalTimeline from "@/components/journal/JournalTimeline";
 import type { JournalEntry } from "@/services/journalService";
+
+
+
 
 /* ── Loading skeletons ─────────────────────────────────────────────────────── */
 function CardSkeleton() {
@@ -45,11 +51,11 @@ function applyFilters(journals: JournalEntry[], filters: FilterState): JournalEn
       (j) =>
         j.title.toLowerCase().includes(q) ||
         j.content.toLowerCase().includes(q) ||
-        j.tags.some((t) => t.toLowerCase().includes(q))
+        (j.tags ?? []).some((t) => t.toLowerCase().includes(q))
     );
   }
   if (filters.mood)         result = result.filter((j) => j.mood === filters.mood);
-  if (filters.tag)          result = result.filter((j) => j.tags.includes(filters.tag));
+  if (filters.tag)          result = result.filter((j) => (j.tags ?? []).includes(filters.tag));
   if (filters.favoritesOnly) result = result.filter((j) => j.favorite);
 
   result.sort((a, b) => {
