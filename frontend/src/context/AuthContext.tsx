@@ -11,11 +11,12 @@ import {
   registerUser,
 } from "../services/authService";
   
-  type User = {
-    _id: string;
-    name: string;
-    email: string;
-  };
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+};
   
   type AuthContextType = {
     user: User | null;

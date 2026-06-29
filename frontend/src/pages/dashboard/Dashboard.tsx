@@ -15,6 +15,7 @@ import useMood from "../../hooks/useMood";
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { token, user } = useAuth();
+  console.log("Dashboard user =", JSON.stringify(user, null, 2));
   const { latestMood } = useMood(token);
   const { latestJournal } = useJournal(token);
 

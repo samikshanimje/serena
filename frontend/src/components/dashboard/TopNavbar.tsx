@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, Search, Bell, X, Command } from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
+import { LogOut, ChevronDown } from "lucide-react";
 
 interface Props {
   onMenuClick: () => void;
@@ -15,6 +17,7 @@ const NOTIFS = [
 
 export default function TopNavbar({ onMenuClick, userName = "Samiksha" }: Props) {
   const [showNotifs, setShowNotifs] = useState(false);
+  const { user, logout } = useAuth();
   const unread = NOTIFS.filter((n) => n.unread).length;
 
   return (
@@ -31,7 +34,13 @@ export default function TopNavbar({ onMenuClick, userName = "Samiksha" }: Props)
       {/* Greeting */}
       <div className="hidden sm:block min-w-0">
         <p className="text-sm font-medium text-slate-700 truncate">
-          Good to see you, <span className="text-violet-600 font-semibold">{userName}</span> 🌸
+        {
+  new Date().getHours() < 12
+    ? "Good Morning,"
+    : new Date().getHours() < 17
+    ? "Good Afternoon,"
+    : "Good Evening,"
+} <span className="text-violet-600 font-semibold">{user?.name ?? userName}</span> 🌸
         </p>
       </div>
 
@@ -118,13 +127,46 @@ export default function TopNavbar({ onMenuClick, userName = "Samiksha" }: Props)
       </div>
 
       {/* Avatar */}
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        className="w-9 h-9 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold shadow-md shadow-violet-200 cursor-pointer select-none"
-        aria-label={`Logged in as ${userName}`}
-      >
-        {userName.charAt(0).toUpperCase()}
-      </motion.div>
+      <div className="relative group">
+  <button className="flex items-center gap-2 rounded-2xl hover:bg-slate-100 p-1 transition">
+    {user?.avatar ? (
+      <img
+        src={user.avatar}
+        alt={user.name}
+        className="w-10 h-10 rounded-full border-2 border-violet-200"
+      />
+    ) : (
+      <div className="w-10 h-10 rounded-full bg-violet-600 text-white flex items-center justify-center font-semibold">
+        {(user?.name ?? userName).charAt(0)}
+      </div>
+    )}
+
+    <ChevronDown
+      size={16}
+      className="text-slate-500"
+    />
+  </button>
+
+  <div className="absolute right-0 mt-2 hidden group-hover:block w-60 rounded-2xl bg-white shadow-xl border border-slate-100 p-4">
+    <p className="font-semibold">
+      {user?.name}
+    </p>
+
+    <p className="text-sm text-slate-500 truncate">
+      {user?.email}
+    </p>
+
+    <hr className="my-3" />
+
+    <button
+      onClick={logout}
+      className="flex items-center gap-2 text-red-500 hover:text-red-600"
+    >
+      <LogOut size={16} />
+      Logout
+    </button>
+  </div>
+</div>
     </header>
   );
 }
