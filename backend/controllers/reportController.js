@@ -1,6 +1,6 @@
 import Journal from "../models/Journal.js";
 import Mood from "../models/Mood.js";
-import { generateChatResponse } from "../services/geminiService.js";
+import { analyzeWeeklyReportWithAI } from "../services/geminiService.js";
 
 export const generateWeeklyReport = async (req, res) => {
   try {
@@ -20,61 +20,12 @@ export const generateWeeklyReport = async (req, res) => {
       .map(m => `${m.mood} (${new Date(m.createdAt).toDateString()})`)
       .join("\n");
 
-    const prompt = `
-Generate a Weekly Wellness Report.
+    const report = await analyzeWeeklyReportWithAI(moodText, journalText);
 
-Mood History:
-${moodText}
-
-Journal History:
-${journalText}
-
-Return:
-
-# Weekly Wellness Report
-
-Mood Summary
-
-Journal Summary
-
-Achievements
-
-Stress Triggers
-
-Positive Habits
-
-Recommendations
-
-Action Plan
-`;
-
-const report = await generateChatResponse(
-    prompt +
-    `
-  
-  Return ONLY valid JSON.
-  
-  {
-    "moodSummary":"",
-    "journalSummary":"",
-    "achievements":[],
-    "stressTriggers":[],
-    "positiveHabits":[],
-    "recommendations":[],
-    "actionPlan":""
-  }
-  `
-  );
-  
-  const clean = report
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
-  
-  res.json({
-    success: true,
-    report: JSON.parse(clean),
-  });
+    res.json({
+      success: true,
+      report,
+    });
 
   } catch (err) {
     res.status(500).json({

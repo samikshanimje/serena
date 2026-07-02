@@ -2,18 +2,39 @@
 
 @import "tailwindcss";
 
-/* ── Design Tokens ── */
+/* ── Tailwind v4 Custom Dark Variant ── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Tailwind v4 Theme Extension ── */
+@theme {
+  --color-dark-bg: #09090B;
+  --color-dark-bg-sec: #111113;
+  --color-dark-card: #18181B;
+  --color-dark-card-el: #232329;
+  --color-dark-border: #2A2A30;
+  --color-dark-lavender: #A78BFA;
+  --color-dark-lavender-hover: #8B5CF6;
+  --color-dark-lavender-sec: #C4B5FD;
+  --color-dark-text-pri: #FAFAFA;
+  --color-dark-text-sec: #B4B4BE;
+  --color-dark-text-mut: #71717A;
+  --color-dark-danger: #EF4444;
+  --color-dark-warning: #F59E0B;
+  --color-dark-info: #C4B5FD;
+}
+
+/* ── Design Tokens (Soft Lavender Light Theme Refinement) ── */
 :root {
-  --violet-50: #f5f3ff;
-  --violet-100: #ede9fe;
-  --violet-500: #8b5cf6;
-  --violet-600: #7c3aed;
-  --pink-accent: #f9a8d4;
+  --violet-50: #FAF9FE;
+  --violet-100: #F1EDFA;
+  --violet-500: #A78BFA;
+  --violet-600: #8B5CF6;
+  --pink-accent: #C4B5FD;
   --surface: #ffffff;
   --surface-2: #fafafa;
-  --border: #e8e4f0;
-  --text-primary: #0f0a1e;
-  --text-secondary: #6b7280;
+  --border: #ECEAF2;
+  --text-primary: #18181B;
+  --text-secondary: #71717A;
   --radius-card: 24px;
 }
 
@@ -37,14 +58,14 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d8b4fe; border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: #a78bfa; }
 
 /* ── Selection ── */
-::selection { background: #ddd6fe; color: #4c1d95; }
+::selection { background: #f1edfa; color: #5c3db5; }
 
 /* ── Focus ring ── */
-:focus-visible { outline: 2px solid #8b5cf6; outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 2px solid #a78bfa; outline-offset: 2px; border-radius: 6px; }
 
 /* ── Glass card utility ── */
 .glass {
@@ -63,7 +84,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Gradient text ── */
 .gradient-text {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #c4b5fd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -71,10 +92,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Ambient glow ── */
 .glow-violet {
-  box-shadow: 0 0 40px -8px rgba(139, 92, 246, 0.45);
+  box-shadow: 0 0 40px -8px rgba(167, 139, 250, 0.45);
 }
 .glow-pink {
-  box-shadow: 0 0 40px -8px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 0 40px -8px rgba(196, 181, 253, 0.3);
 }
 
 /* ── Chat message prose ── */
@@ -83,8 +104,220 @@ h1, h2, h3, h4, h5, h6 {
 .prose-chat code {
   font-family: "Fira Code", monospace;
   font-size: 0.85em;
-  background: rgba(139,92,246,0.1);
+  background: rgba(167,139,250,0.1);
   padding: 0.1em 0.35em;
   border-radius: 4px;
 }
 .prose-chat strong { font-weight: 600; }
+
+/* ── Theme Smooth Transitions ── */
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, text-decoration-color 0.2s ease, fill 0.2s ease, stroke 0.2s ease !important;
+  transition-delay: 0s !important;
+}
+
+/* ── Premium Dark Mode Theme Custom Tokens ── */
+.dark {
+  --violet-50: rgba(167, 139, 250, 0.08);
+  --violet-100: rgba(167, 139, 250, 0.16);
+  --violet-500: #A78BFA;
+  --violet-600: #8B5CF6;
+  --pink-accent: #C4B5FD;
+  --surface: #18181B;
+  --surface-2: #09090B;
+  --border: #2A2A30;
+  --text-primary: #FAFAFA;
+  --text-secondary: #B4B4BE;
+}
+
+/* Dark Base Overrides */
+.dark body {
+  background-color: #09090B;
+  color: #FAFAFA;
+}
+
+/* Selection */
+.dark ::selection {
+  background: rgba(167, 139, 250, 0.25);
+  color: #FAFAFA;
+}
+
+/* Focus ring */
+.dark :focus-visible {
+  outline: 2px solid #A78BFA;
+}
+
+/* Custom scrollbars in dark mode */
+.dark ::-webkit-scrollbar-thumb {
+  background: #2A2A30;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #A78BFA;
+}
+
+/* Glass override */
+.dark .glass {
+  background: rgba(24, 24, 27, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Gradient text */
+.dark .gradient-text {
+  background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 50%, #C4B5FD 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Ambient glow */
+.dark .glow-violet {
+  box-shadow: 0 0 40px -8px rgba(167, 139, 250, 0.3) !important;
+}
+.dark .glow-pink {
+  box-shadow: 0 0 40px -8px rgba(196, 181, 253, 0.15) !important;
+}
+
+/* Prose chat code override */
+.dark .prose-chat code {
+  background: rgba(167, 139, 250, 0.15) !important;
+  color: #A78BFA;
+}
+
+/* Explicit CSS overrides for Tailwind colors in dark mode */
+.dark .bg-white {
+  background-color: #18181B !important;
+}
+.dark .bg-slate-50 {
+  background-color: #09090B !important;
+}
+.dark .bg-slate-100 {
+  background-color: #111113 !important;
+}
+.dark .bg-violet-50 {
+  background-color: rgba(167, 139, 250, 0.08) !important;
+}
+.dark .bg-violet-100 {
+  background-color: rgba(167, 139, 250, 0.16) !important;
+}
+.dark .bg-violet-600, 
+.dark .bg-violet-500 {
+  background-color: #A78BFA !important;
+}
+.dark .bg-violet-700 {
+  background-color: #8B5CF6 !important;
+}
+.dark .bg-purple-600 {
+  background-color: #A78BFA !important;
+}
+
+/* Gradients (Replace all purple/pink accent gradients with Lavender-LavenderHover) */
+.dark .bg-gradient-to-br.from-violet-500.to-purple-600,
+.dark .bg-gradient-to-br.from-violet-600.to-purple-600,
+.dark .bg-gradient-to-r.from-violet-600.to-purple-600,
+.dark .bg-gradient-to-r.from-violet-400.via-purple-500.to-indigo-400,
+.dark .bg-gradient-to-r.from-violet-100.via-purple-100.to-transparent {
+  background-image: linear-gradient(to bottom right, #A78BFA, #8B5CF6) !important;
+}
+
+.dark .bg-gradient-to-br.from-violet-600.via-purple-600.to-indigo-700 {
+  background-image: linear-gradient(to bottom right, #A78BFA, #C4B5FD) !important;
+}
+
+.dark .bg-gradient-to-br.from-violet-50\/70.to-purple-50\/70 {
+  background-image: linear-gradient(to bottom right, rgba(167, 139, 250, 0.08), rgba(196, 181, 253, 0.08)) !important;
+}
+
+.dark .bg-gradient-to-br.from-violet-50\/50.to-purple-50\/50 {
+  background-image: linear-gradient(to bottom right, rgba(167, 139, 250, 0.06), rgba(196, 181, 253, 0.06)) !important;
+}
+
+.dark .bg-gradient-to-r.from-violet-600.to-purple-600.hover\:from-violet-700.hover\:to-purple-700:hover {
+  background-image: linear-gradient(to bottom right, #8B5CF6, #7C3AED) !important;
+}
+
+/* Border mapping */
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-slate-300\/50,
+.dark .border-violet-100,
+.dark .border-violet-200 {
+  border-color: #2A2A30 !important;
+}
+
+/* Text mapping */
+.dark .text-slate-950,
+.dark .text-slate-900,
+.dark .text-slate-800 {
+  color: #FAFAFA !important;
+}
+.dark .text-slate-700 {
+  color: #FAFAFA !important;
+}
+.dark .text-slate-600,
+.dark .text-slate-500,
+.dark .text-slate-400 {
+  color: #B4B4BE !important;
+}
+.dark .text-slate-300 {
+  color: #71717A !important;
+}
+.dark .text-violet-600,
+.dark .text-violet-700,
+.dark .text-violet-800,
+.dark .text-purple-600 {
+  color: #A78BFA !important;
+}
+
+/* Shadows */
+.dark .shadow-sm,
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-xl,
+.dark .shadow-2xl,
+.dark .shadow-violet-100,
+.dark .shadow-violet-200 {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Form inputs styling */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #111113 !important;
+  color: #FAFAFA !important;
+  border-color: #2A2A30 !important;
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #71717A !important;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: #A78BFA !important;
+  outline: none;
+}
+
+/* Custom interactive buttons / list items */
+.dark .hover\:bg-violet-50:hover {
+  background-color: rgba(167, 139, 250, 0.08) !important;
+}
+.dark .hover\:text-violet-600:hover,
+.dark .hover\:text-violet-700:hover {
+  color: #A78BFA !important;
+}
+.dark .active\:bg-violet-100:active {
+  background-color: rgba(167, 139, 250, 0.16) !important;
+}
+
+.dark aside,
+.dark header {
+  background-color: #111113 !important;
+}
+.dark aside > div {
+  background-color: #111113 !important;
+  border-color: #2A2A30 !important;
+}

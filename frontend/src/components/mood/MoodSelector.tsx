@@ -2,16 +2,17 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { addMood } from "../../services/moodService";
+import { useTheme } from "../../hooks/useTheme";
 
 const MOODS = [
-  { emoji: "😄", label: "Amazing",  value: "Amazing",  color: "#10b981", glow: "rgba(16,185,129,0.35)",  grad: "from-emerald-400 to-green-500",  bg: "bg-emerald-50" },
-  { emoji: "😊", label: "Happy",    value: "Happy",    color: "#8b5cf6", glow: "rgba(139,92,246,0.35)",  grad: "from-violet-400 to-purple-500",  bg: "bg-violet-50" },
-  { emoji: "😌", label: "Calm",     value: "Calm",     color: "#38bdf8", glow: "rgba(56,189,248,0.35)",  grad: "from-sky-400 to-cyan-400",       bg: "bg-sky-50" },
-  { emoji: "😐", label: "Neutral",  value: "Neutral",  color: "#94a3b8", glow: "rgba(148,163,184,0.3)",  grad: "from-slate-400 to-slate-500",    bg: "bg-slate-100" },
-  { emoji: "😔", label: "Sad",      value: "Sad",      color: "#60a5fa", glow: "rgba(96,165,250,0.35)",  grad: "from-blue-400 to-indigo-400",    bg: "bg-blue-50" },
-  { emoji: "😭", label: "Very Sad", value: "Very Sad", color: "#818cf8", glow: "rgba(129,140,248,0.35)", grad: "from-indigo-400 to-violet-500",  bg: "bg-indigo-50" },
-  { emoji: "😡", label: "Angry",    value: "Angry",    color: "#f87171", glow: "rgba(248,113,113,0.35)", grad: "from-red-400 to-rose-500",       bg: "bg-red-50" },
-  { emoji: "😰", label: "Anxious",  value: "Anxious",  color: "#fb923c", glow: "rgba(251,146,60,0.35)",  grad: "from-orange-400 to-amber-400",   bg: "bg-orange-50" },
+  { emoji: "😄", label: "Amazing",  value: "Amazing",  color: "#10b981", glow: "rgba(16,185,129,0.2)",  grad: "from-emerald-400 to-green-500",  bg: "bg-emerald-50" },
+  { emoji: "😊", label: "Happy",    value: "Happy",    color: "#8b5cf6", glow: "rgba(139,92,246,0.2)",  grad: "from-violet-400 to-purple-500",  bg: "bg-violet-50" },
+  { emoji: "😌", label: "Calm",     value: "Calm",     color: "#38bdf8", glow: "rgba(56,189,248,0.2)",  grad: "from-sky-400 to-cyan-400",       bg: "bg-sky-50" },
+  { emoji: "😐", label: "Neutral",  value: "Neutral",  color: "#94a3b8", glow: "rgba(148,163,184,0.15)",  grad: "from-slate-400 to-slate-500",    bg: "bg-slate-100" },
+  { emoji: "😔", label: "Sad",      value: "Sad",      color: "#60a5fa", glow: "rgba(96,165,250,0.2)",  grad: "from-blue-400 to-indigo-400",    bg: "bg-blue-50" },
+  { emoji: "😭", label: "Very Sad", value: "Very Sad", color: "#818cf8", glow: "rgba(129,140,248,0.2)", grad: "from-indigo-400 to-violet-500",  bg: "bg-indigo-50" },
+  { emoji: "😡", label: "Angry",    value: "Angry",    color: "#f87171", glow: "rgba(248,113,113,0.2)", grad: "from-red-400 to-rose-500",       bg: "bg-red-50" },
+  { emoji: "😰", label: "Anxious",  value: "Anxious",  color: "#fb923c", glow: "rgba(251,146,60,0.2)",  grad: "from-orange-400 to-amber-400",   bg: "bg-orange-50" },
 ];
 
 const ENERGY_LABELS   = ["Drained", "Low", "Moderate", "Good", "Energized"];
@@ -25,21 +26,22 @@ interface SliderProps {
   onChange: (v: number) => void;
   labels: string[];
   color: string;
+  isDark: boolean;
 }
 
-function PremiumSlider({ label, emoji, value, onChange, labels, color }: SliderProps) {
+function PremiumSlider({ label, emoji, value, onChange, labels, color, isDark }: SliderProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-lg">{emoji}</span>
-          <span className="text-sm font-semibold text-slate-700">{label}</span>
+          <span className={`text-sm font-semibold ${isDark ? "text-slate-350" : "text-slate-700"}`}>{label}</span>
         </div>
         <span className="text-sm font-bold px-2.5 py-0.5 rounded-full" style={{ color, background: `${color}18` }}>
           {labels[value - 1]}
         </span>
       </div>
-      <div className="relative h-2 rounded-full bg-slate-100">
+      <div className={`relative h-2 rounded-full ${isDark ? "bg-dark-bg" : "bg-slate-100"}`}>
         <motion.div
           className="absolute h-2 rounded-full"
           style={{ background: `linear-gradient(to right, ${color}88, ${color})` }}
@@ -54,7 +56,7 @@ function PremiumSlider({ label, emoji, value, onChange, labels, color }: SliderP
         />
         {/* Thumb dot */}
         <motion.div
-          className="pointer-events-none absolute top-1/2 h-5 w-5 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-white shadow-md"
+          className="pointer-events-none absolute top-1/2 h-5 w-5 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-white dark:border-dark-card shadow-md"
           style={{ left: `${((value - 1) / 4) * 100}%`, background: color }}
           animate={{ left: `${((value - 1) / 4) * 100}%` }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -62,7 +64,7 @@ function PremiumSlider({ label, emoji, value, onChange, labels, color }: SliderP
       </div>
       <div className="flex justify-between mt-1.5">
         {labels.map((l) => (
-          <span key={l} className="text-[10px] text-slate-400">{l}</span>
+          <span key={l} className="text-[10px] text-slate-400 dark:text-slate-500">{l}</span>
         ))}
       </div>
     </div>
@@ -84,6 +86,8 @@ export default function MoodSelector({ token, onLogged }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [loading,  setLoading]  = useState(false);
   const [done,     setDone]     = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const selectedMood = MOODS.find((m) => m.value === selected);
 
@@ -106,7 +110,7 @@ export default function MoodSelector({ token, onLogged }: Props) {
     <div className="space-y-6">
       {/* Emoji grid */}
       <div>
-        <p className="text-xs font-semibold tracking-widest text-slate-400 uppercase mb-4">Select your mood</p>
+        <p className="text-xs font-semibold tracking-widest text-slate-400 dark:text-slate-500 uppercase mb-4">Select your mood</p>
         <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
           {MOODS.map((mood, i) => {
             const isSelected = selected === mood.value;
@@ -121,12 +125,14 @@ export default function MoodSelector({ token, onLogged }: Props) {
                 onClick={() => { setSelected(mood.value); setExpanded(true); }}
                 aria-pressed={isSelected}
                 aria-label={`Mood: ${mood.label}`}
-                className={`relative flex flex-col items-center gap-2 rounded-2xl p-3 pt-4 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
+                className={`relative flex flex-col items-center gap-2 rounded-2xl p-3 pt-4 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 dark:focus-visible:ring-dark-lavender cursor-pointer ${
                   isSelected
-                    ? "bg-white shadow-xl"
-                    : "bg-white/60 hover:bg-white border border-slate-100 shadow-sm"
+                    ? (isDark ? "bg-dark-card-el border border-dark-border" : "bg-white shadow-xl")
+                    : (isDark ? "bg-dark-card hover:bg-dark-card-el border border-dark-border" : "bg-white/60 hover:bg-white border border-slate-100 shadow-sm")
                 }`}
-                style={isSelected ? {
+                style={isSelected && !isDark ? {
+                  boxShadow: `0 0 0 2px ${mood.color}, 0 8px 32px ${mood.glow}`,
+                } : isSelected && isDark ? {
                   boxShadow: `0 0 0 2px ${mood.color}, 0 8px 32px ${mood.glow}`,
                 } : {}}
               >
@@ -145,7 +151,11 @@ export default function MoodSelector({ token, onLogged }: Props) {
                 >
                   {mood.emoji}
                 </motion.span>
-                <span className={`text-[11px] font-semibold ${isSelected ? "text-slate-800" : "text-slate-500"}`}>
+                <span className={`text-[11px] font-semibold ${
+                  isSelected
+                    ? (isDark ? "text-white" : "text-slate-800")
+                    : (isDark ? "text-slate-400" : "text-slate-500")
+                }`}>
                   {mood.label}
                 </span>
 
@@ -176,7 +186,9 @@ export default function MoodSelector({ token, onLogged }: Props) {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <div className="rounded-3xl border border-slate-100 bg-white p-7 shadow-sm space-y-7">
+            <div className={`rounded-3xl border p-7 shadow-sm space-y-7 transition-all ${
+              isDark ? "border-dark-border bg-dark-card" : "border-slate-100 bg-white"
+            }`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
@@ -186,13 +198,15 @@ export default function MoodSelector({ token, onLogged }: Props) {
                     {selectedMood?.emoji}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-800">{selectedMood?.label}</p>
-                    <p className="text-xs text-slate-400">Tell me more about how you're feeling</p>
+                    <p className={`text-sm font-bold ${isDark ? "text-white" : "text-slate-800"}`}>{selectedMood?.label}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">Tell me more about how you're feeling</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setExpanded(false)}
-                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
+                  className={`p-2 rounded-xl transition-colors cursor-pointer ${
+                    isDark ? "text-slate-500 hover:text-slate-350 hover:bg-dark-card-el" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+                  }`}
                 >
                   <ChevronUp size={16} />
                 </button>
@@ -203,25 +217,29 @@ export default function MoodSelector({ token, onLogged }: Props) {
                 <PremiumSlider
                   label="Energy Level" emoji="⚡" value={energy}
                   onChange={setEnergy} labels={ENERGY_LABELS} color="#8b5cf6"
+                  isDark={isDark}
                 />
                 <PremiumSlider
                   label="Stress Level" emoji="🌀" value={stress}
                   onChange={setStress} labels={STRESS_LABELS} color="#f87171"
+                  isDark={isDark}
                 />
                 <PremiumSlider
                   label="Sleep Quality" emoji="🌙" value={sleep}
                   onChange={setSleep} labels={SLEEP_LABELS} color="#38bdf8"
+                  isDark={isDark}
                 />
                 <PremiumSlider
                   label="Water Intake" emoji="💧" value={water}
                   onChange={setWater} labels={["None", "Little", "Some", "Good", "Lots"]} color="#34d399"
+                  isDark={isDark}
                 />
               </div>
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Notes <span className="text-slate-400 font-normal">(optional)</span>
+                <label className={`block text-sm font-semibold mb-2 ${isDark ? "text-slate-350" : "text-slate-700"}`}>
+                  Notes <span className="text-slate-400 dark:text-slate-500 font-normal">(optional)</span>
                 </label>
                 <div className="relative">
                   <motion.textarea
@@ -229,7 +247,11 @@ export default function MoodSelector({ token, onLogged }: Props) {
                     onChange={(e) => setNote(e.target.value.slice(0, 280))}
                     placeholder="What's on your mind? Any thoughts, triggers, or moments worth noting…"
                     rows={3}
-                    className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-800 placeholder:text-slate-400 focus:border-violet-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-100 transition-all"
+                    className={`w-full resize-none rounded-2xl border px-4 py-3.5 text-sm transition-all outline-none ${
+                      isDark
+                        ? "border-dark-border bg-dark-bg text-white placeholder:text-slate-600 focus:border-dark-lavender focus:ring-2 focus:ring-dark-lavender/10"
+                        : "border-slate-200 bg-slate-50 text-slate-800 placeholder:text-slate-400 focus:border-violet-300 focus:bg-white focus:ring-2 focus:ring-violet-100"
+                    }`}
                     whileFocus={{ scale: 1.005 }}
                     transition={{ duration: 0.15 }}
                   />
@@ -245,10 +267,12 @@ export default function MoodSelector({ token, onLogged }: Props) {
                 disabled={loading || done}
                 whileTap={{ scale: 0.97 }}
                 whileHover={{ scale: 1.02 }}
-                className={`relative w-full py-4 rounded-2xl font-bold text-sm transition-all shadow-lg ${
+                className={`relative w-full py-4 rounded-2xl font-bold text-sm transition-all shadow-lg cursor-pointer ${
                   done
-                    ? "bg-emerald-500 text-white shadow-emerald-200"
-                    : "bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-violet-200 hover:from-violet-700 hover:to-purple-700 disabled:opacity-60"
+                    ? (isDark ? "bg-emerald-500 text-white shadow-none" : "bg-emerald-500 text-white shadow-emerald-250")
+                    : (isDark
+                        ? "bg-dark-lavender text-black hover:bg-dark-lavender-hover shadow-none disabled:opacity-60"
+                        : "bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-violet-200 hover:from-violet-700 hover:to-purple-700 disabled:opacity-60")
                 }`}
               >
                 {done ? (
@@ -277,7 +301,11 @@ export default function MoodSelector({ token, onLogged }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onClick={() => setExpanded(true)}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-violet-200 bg-violet-50/50 py-3 text-sm font-medium text-violet-500 hover:bg-violet-50 transition-colors"
+          className={`flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed py-3 text-sm font-medium transition-colors cursor-pointer ${
+            isDark
+              ? "border-dark-lavender/30 bg-dark-lavender/5 text-dark-lavender hover:bg-dark-lavender/10"
+              : "border-violet-200 bg-violet-50/50 text-violet-500 hover:bg-violet-50"
+          }`}
         >
           <ChevronDown size={15} />Add details &amp; log mood
         </motion.button>

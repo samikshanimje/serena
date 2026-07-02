@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, ArrowRight, Sparkles, AlertCircle, Loader2 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
@@ -9,6 +9,8 @@ import axios from "axios";
 export default function LoginPage() {
   const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const sessionExpired = searchParams.get("expired") === "true";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -153,7 +155,7 @@ export default function LoginPage() {
             onSubmit={handleSubmit}
             className="space-y-5"
           >
-            {/* Error */}
+             {/* Error */}
             <AnimatePresence>
               {error && (
                 <motion.div
@@ -164,6 +166,17 @@ export default function LoginPage() {
                 >
                   <AlertCircle size={16} className="shrink-0" />
                   {error}
+                </motion.div>
+              )}
+              {!error && sessionExpired && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-100 rounded-2xl text-amber-700 text-sm"
+                >
+                  <AlertCircle size={16} className="shrink-0 text-amber-500" />
+                  Your session has expired. Please sign in again.
                 </motion.div>
               )}
             </AnimatePresence>
@@ -179,7 +192,8 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3.5 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent focus:bg-white transition-all text-sm"
+                disabled={loading}
+                className="w-full px-4 py-3.5 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent focus:bg-white transition-all text-sm disabled:opacity-50"
               />
             </div>
 
@@ -189,7 +203,7 @@ export default function LoginPage() {
                 <label className="block text-sm font-semibold text-slate-700">
                   Password
                 </label>
-                <button type="button" className="text-xs text-violet-600 hover:text-violet-700 font-medium transition-colors">
+                <button type="button" disabled={loading} className="text-xs text-violet-600 hover:text-violet-700 font-medium transition-colors disabled:opacity-50">
                   Forgot password?
                 </button>
               </div>
@@ -200,12 +214,14 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-3.5 pr-12 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent focus:bg-white transition-all text-sm"
+                  disabled={loading}
+                  className="w-full px-4 py-3.5 pr-12 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent focus:bg-white transition-all text-sm disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-violet-500 transition-colors"
+                  disabled={loading}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-violet-500 transition-colors disabled:opacity-50"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -218,7 +234,7 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold text-sm hover:from-violet-700 hover:to-purple-700 disabled:opacity-60 transition-all shadow-lg shadow-violet-200 mt-2"
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold text-sm hover:from-violet-700 hover:to-purple-700 disabled:opacity-60 transition-all shadow-lg shadow-violet-200 mt-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -235,30 +251,42 @@ export default function LoginPage() {
           </motion.form>
 
 
-          <div className="mb-6 flex justify-center">
-  <GoogleLogin
-    onSuccess={async (credentialResponse) => {
-      try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/auth/google`,
-          {
-            credential: credentialResponse.credential,
-          }
-        );
+          <div className="mb-6 flex flex-col items-center justify-center gap-3">
+            <div className="w-full flex items-center gap-4 my-2">
+              <div className="flex-1 h-px bg-slate-100" />
+              <span className="text-xs text-slate-400 font-medium">OR CONTINUE WITH</span>
+              <div className="flex-1 h-px bg-slate-100" />
+            </div>
 
-        googleLogin(res.data.token, res.data.user);
+            <div className={`transition-opacity duration-200 ${loading ? "opacity-40 pointer-events-none" : ""}`}>
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  if (loading) return;
+                  try {
+                    setLoading(true);
+                    setError("");
+                    const res = await axios.post(
+                      `${import.meta.env.VITE_API_URL}/api/auth/google`,
+                      {
+                        credential: credentialResponse.credential,
+                      }
+                    );
 
-        navigate("/dashboard");
-      } catch (err) {
-        console.error(err);
-        setError("Google login failed.");
-      }
-    }}
-    onError={() => {
-      setError("Google login failed.");
-    }}
-  />
-</div>
+                    googleLogin(res.data.token, res.data.user);
+                    navigate("/dashboard");
+                  } catch (err: any) {
+                    console.error(err);
+                    setError(err.response?.data?.message || "Google login failed. Please try again.");
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                onError={() => {
+                  setError("Google login failed. Please try again.");
+                }}
+              />
+            </div>
+          </div>
 
           {/* Divider */}
           <div className="flex items-center gap-4 my-8">

@@ -109,6 +109,19 @@ export const googleLogin = async (req, res) => {
         password: "GOOGLE_ACCOUNT",
         avatar,
       });
+    } else {
+      let updated = false;
+      if (avatar && user.avatar !== avatar) {
+        user.avatar = avatar;
+        updated = true;
+      }
+      if (name && !user.name) {
+        user.name = name;
+        updated = true;
+      }
+      if (updated) {
+        await user.save();
+      }
     }
 
     const token = jwt.sign(

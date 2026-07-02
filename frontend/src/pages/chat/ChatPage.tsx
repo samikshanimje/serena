@@ -7,6 +7,7 @@ import ChatHeader from "../../components/chat/ChatHeader";
 import ChatInput from "../../components/chat/ChatInput";
 import TypingIndicator from "../../components/chat/TypingIndicator";
 import useChat from "../../hooks/useChat";
+import { useTheme } from "../../hooks/useTheme";
 
 const SUGGESTIONS = [
   { icon: Heart, label: "I'm feeling anxious", prompt: "I've been feeling anxious lately and I'm not sure why." },
@@ -21,10 +22,12 @@ function formatTime(date: Date) {
 
 export default function ChatPage() {
   const { token, user } = useAuth();
-  const { messages, send, loading } = useChat(token);
+  const { messages, send, clear, loading } = useChat(token);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [msgTimes] = useState(() => new Map<number, string>());
   const [nextIdx, setNextIdx] = useState(0);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   // Track timestamps for messages
   useEffect(() => {
@@ -34,7 +37,7 @@ export default function ChatPage() {
       }
       setNextIdx(messages.length);
     }
-  }, [messages.length]);
+  }, [messages.length, nextIdx, msgTimes]);
 
   // Auto-scroll
   useEffect(() => {
@@ -54,8 +57,8 @@ export default function ChatPage() {
   const isEmpty = messages.length === 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <ChatHeader onClear={undefined} />
+    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg flex flex-col">
+      <ChatHeader onClear={clear} />
 
       <div className="flex-1 flex flex-col mx-auto w-full max-w-3xl min-h-0">
         {/* Messages area */}
@@ -75,15 +78,15 @@ export default function ChatPage() {
                 <motion.div
                   animate={{ scale: [1, 1.04, 1] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-5 shadow-xl shadow-violet-300/40"
+                  className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-5 shadow-xl shadow-violet-300/40 dark:shadow-none"
                 >
                   <Sparkles size={32} className="text-white" />
                 </motion.div>
 
-                <h2 className="text-2xl font-bold text-slate-900 font-[Sora,sans-serif] mb-2">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white font-[Sora,sans-serif] mb-2">
                   Hi {userName} 🌸
                 </h2>
-                <p className="text-slate-500 text-sm max-w-xs leading-relaxed mb-8">
+                <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xs leading-relaxed mb-8">
                   I'm Serena, your personal wellness companion. How are you feeling today? I'm here to listen.
                 </p>
 
@@ -95,12 +98,18 @@ export default function ChatPage() {
                       whileHover={{ scale: 1.03, y: -2 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={() => handleSuggestion(prompt)}
-                      className="flex items-center gap-2.5 p-3.5 bg-white rounded-2xl border border-slate-100 shadow-sm text-left hover:border-violet-200 hover:shadow-md hover:shadow-violet-50 transition-all group"
+                      className={`flex items-center gap-2.5 p-3.5 rounded-2xl border shadow-sm text-left transition-all group cursor-pointer ${
+                        isDark
+                          ? "bg-dark-card border-dark-border hover:border-dark-lavender/50 hover:bg-dark-card-el"
+                          : "bg-white border-slate-100 hover:border-violet-200 hover:shadow-md hover:shadow-violet-50"
+                      }`}
                     >
-                      <div className="w-8 h-8 rounded-xl bg-violet-50 group-hover:bg-violet-100 flex items-center justify-center transition-colors shrink-0">
-                        <Icon size={16} className="text-violet-500" />
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors shrink-0 ${
+                        isDark ? "bg-dark-lavender/10 text-dark-lavender" : "bg-violet-50 group-hover:bg-violet-100 text-violet-500"
+                      }`}>
+                        <Icon size={16} />
                       </div>
-                      <span className="text-sm font-medium text-slate-700">{label}</span>
+                      <span className={`text-sm font-medium ${isDark ? "text-slate-300" : "text-slate-700"}`}>{label}</span>
                     </motion.button>
                   ))}
                 </div>

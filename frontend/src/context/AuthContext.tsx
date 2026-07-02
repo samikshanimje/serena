@@ -4,8 +4,9 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useNavigate } from "react-router-dom";
   
-  import {
+import {
   getProfile,
   loginUser,
   registerUser,
@@ -16,6 +17,8 @@ type User = {
   name: string;
   email: string;
   avatar?: string;
+  streak?: number;
+  moodScore?: number;
 };
   
   type AuthContextType = {
@@ -42,6 +45,7 @@ type User = {
   }: {
     children: React.ReactNode;
   }) => {
+    const navigate = useNavigate();
     const [user, setUser] = useState<User | null>(null);
   
     const [token, setToken] = useState<string | null>(
@@ -110,10 +114,9 @@ type User = {
   
     const logout = () => {
       localStorage.removeItem("token");
-  
       setUser(null);
-  
       setToken(null);
+      navigate("/login");
     };
   
     return (

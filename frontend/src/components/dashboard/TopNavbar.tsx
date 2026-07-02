@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, Search, Bell, X, Command } from "lucide-react";
+import { Menu, Search, Bell, X, Command, User, Settings, LogOut, ChevronDown, Sun, Moon } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-import { LogOut, ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../hooks/useTheme";
 
 interface Props {
   onMenuClick: () => void;
@@ -11,13 +12,16 @@ interface Props {
 
 const NOTIFS = [
   { id: 1, emoji: "🎉", text: "7-day mood streak! Keep it up.", time: "2m ago", unread: true },
-  { id: 2, emoji: "💜", text: "Time for your evening reflection.", time: "1h ago", unread: true },
+  { id: 2, emoji: "💚", text: "Time for your evening reflection.", time: "1h ago", unread: true },
   { id: 3, emoji: "✅", text: "Sleep habit logged.", time: "8h ago", unread: false },
 ];
 
 export default function TopNavbar({ onMenuClick, userName = "Samiksha" }: Props) {
   const [showNotifs, setShowNotifs] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const unread = NOTIFS.filter((n) => n.unread).length;
 
   return (
@@ -126,47 +130,94 @@ export default function TopNavbar({ onMenuClick, userName = "Samiksha" }: Props)
         </AnimatePresence>
       </div>
 
-      {/* Avatar */}
-      <div className="relative group">
-  <button className="flex items-center gap-2 rounded-2xl hover:bg-slate-100 p-1 transition">
-    {user?.avatar ? (
-      <img
-        src={user.avatar}
-        alt={user.name}
-        className="w-10 h-10 rounded-full border-2 border-violet-200"
-      />
-    ) : (
-      <div className="w-10 h-10 rounded-full bg-violet-600 text-white flex items-center justify-center font-semibold">
-        {(user?.name ?? userName).charAt(0)}
+      {/* Avatar Dropdown */}
+      <div className="relative">
+        <button
+          onClick={() => setShowProfileMenu(prev => !prev)}
+          className="flex items-center gap-2 rounded-2xl hover:bg-slate-100 p-1.5 transition cursor-pointer"
+          aria-label="User menu"
+        >
+          {user?.avatar ? (
+            <img
+              src={user.avatar}
+              alt={user.name}
+              className="w-9 h-9 rounded-full border border-violet-200 object-cover"
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-full bg-violet-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              {(user?.name ?? userName).charAt(0).toUpperCase()}
+            </div>
+          )}
+
+          <ChevronDown
+            size={14}
+            className={`text-slate-400 transition-transform duration-200 ${showProfileMenu ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        <AnimatePresence>
+          {showProfileMenu && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setShowProfileMenu(false)} />
+              <motion.div
+                initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                transition={{ duration: 0.15 }}
+                className="absolute right-0 mt-2 w-60 rounded-2xl bg-white shadow-2xl border border-slate-100 z-20 p-2 overflow-hidden"
+              >
+                <div className="px-3 py-2">
+                  <p className="font-bold text-slate-800 font-[Sora,sans-serif] text-sm truncate">
+                    {user?.name ?? userName}
+                  </p>
+                  <p className="text-xs text-slate-400 truncate mt-0.5">
+                    {user?.email ?? "member@serena.com"}
+                  </p>
+                </div>
+
+                <div className="h-px bg-slate-100 my-2" />
+
+                <button
+                  onClick={() => { setShowProfileMenu(false); navigate("/profile"); }}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-slate-600 hover:bg-violet-50 hover:text-violet-700 rounded-xl transition-all cursor-pointer"
+                >
+                  <User size={15} />
+                  My Profile
+                </button>
+
+                <button
+                  onClick={() => { setShowProfileMenu(false); navigate("/profile"); }}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-slate-600 hover:bg-violet-50 hover:text-violet-700 rounded-xl transition-all cursor-pointer"
+                >
+                  <Settings size={15} />
+                  Account Settings
+                </button>
+
+                <button
+                  onClick={toggleTheme}
+                  className="flex w-full items-center justify-between px-3 py-2 text-sm text-slate-600 hover:bg-violet-50 hover:text-violet-700 rounded-xl transition-all cursor-pointer"
+                >
+                  <span className="flex items-center gap-2.5">
+                    {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
+                    {theme === "light" ? "Dark Mode" : "Light Mode"}
+                  </span>
+                  <span className="text-[10px] text-slate-400 capitalize">{theme}</span>
+                </button>
+
+                <div className="h-px bg-slate-100 my-2" />
+
+                <button
+                  onClick={() => { setShowProfileMenu(false); logout(); }}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-xl transition-all cursor-pointer font-medium"
+                >
+                  <LogOut size={15} />
+                  Logout
+                </button>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
-    )}
-
-    <ChevronDown
-      size={16}
-      className="text-slate-500"
-    />
-  </button>
-
-  <div className="absolute right-0 mt-2 hidden group-hover:block w-60 rounded-2xl bg-white shadow-xl border border-slate-100 p-4">
-    <p className="font-semibold">
-      {user?.name}
-    </p>
-
-    <p className="text-sm text-slate-500 truncate">
-      {user?.email}
-    </p>
-
-    <hr className="my-3" />
-
-    <button
-      onClick={logout}
-      className="flex items-center gap-2 text-red-500 hover:text-red-600"
-    >
-      <LogOut size={16} />
-      Logout
-    </button>
-  </div>
-</div>
     </header>
   );
 }

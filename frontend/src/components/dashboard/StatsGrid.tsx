@@ -8,9 +8,11 @@ const MOOD_EMOJI: Record<string, string> = {
 
 interface Props {
   latestMood?: { mood: string; note: string } | null;
+  userStreak?: number;
+  journalCount?: number;
 }
 
-export default function StatsGrid({ latestMood }: Props) {
+export default function StatsGrid({ latestMood, userStreak = 0, journalCount = 0 }: Props) {
   const moodEmoji = latestMood?.mood ? (MOOD_EMOJI[latestMood.mood] ?? "🙂") : null;
 
   const STATS = [
@@ -26,23 +28,23 @@ export default function StatsGrid({ latestMood }: Props) {
     },
     {
       title: "Current Streak",
-      value: "12 days",
-      subtitle: "Personal best: 21 days",
+      value: `${userStreak} days`,
+      subtitle: userStreak > 0 ? "Keep maintaining your streak!" : "Start a wellness streak!",
       icon: Flame,
       iconBg: "bg-orange-50",
       iconColor: "text-orange-500",
-      trend: "🔥 On fire",
-      trendPositive: true,
+      trend: userStreak > 0 ? "🔥 Active" : "Get started",
+      trendPositive: userStreak > 0,
     },
     {
       title: "Journal Entries",
-      value: "47",
-      subtitle: "3 this week",
+      value: String(journalCount),
+      subtitle: "Explore your thoughts",
       icon: PenLine,
       iconBg: "bg-violet-50",
       iconColor: "text-violet-500",
-      trend: "+2 this week",
-      trendPositive: true,
+      trend: `${journalCount} total`,
+      trendPositive: journalCount > 0,
     },
     {
       title: "Water Intake",

@@ -92,8 +92,16 @@ export default function JournalPage() {
   const [filters,    setFilters]    = useState<FilterState>(DEFAULT_FILTERS);
   const [modalOpen,  setModalOpen]  = useState(false);
   const [editEntry,  setEditEntry]  = useState<JournalEntry | null>(null);
+  const [selectedInsightEntryId, setSelectedInsightEntryId] = useState<string | null>(null);
 
   const userName = user?.name?.split(" ")[0] ?? "there";
+
+  const activeInsightEntry = useMemo(() => {
+    if (selectedInsightEntryId) {
+      return journals.find((j) => j._id === selectedInsightEntryId) || journals[0] || null;
+    }
+    return journals[0] || null;
+  }, [journals, selectedInsightEntryId]);
 
   /* Available tags from all entries */
   const availableTags = useMemo(() => {
@@ -142,9 +150,9 @@ export default function JournalPage() {
     <div className="min-h-screen bg-slate-50">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-violet-200/20 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-[450px] w-[450px] rounded-full bg-purple-200/15 blur-3xl" />
-        <div className="absolute top-1/2 right-0 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-pink-100/15 blur-3xl" />
+        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-violet-200/20 dark:bg-dark-lavender/8 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-[450px] w-[450px] rounded-full bg-purple-200/15 dark:bg-dark-lavender-sec/6 blur-3xl" />
+        <div className="absolute top-1/2 right-0 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-pink-100/15 dark:bg-dark-lavender/4 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-8 space-y-6">
@@ -232,6 +240,8 @@ export default function JournalPage() {
                   onDelete={removeJournal}
                   onPin={handlePin}
                   onFavorite={handleFavorite}
+                  selectedId={activeInsightEntry?._id}
+                  onSelect={(entry) => setSelectedInsightEntryId(entry._id)}
                 />
               </motion.div>
             )}
@@ -241,7 +251,7 @@ export default function JournalPage() {
           {!isEmpty && (
             <motion.div {...fadeUp(0.18)}>
               <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm md:p-8 sticky top-6">
-                <JournalInsightCard />
+                <JournalInsightCard entry={activeInsightEntry} />
               </div>
             </motion.div>
           )}
@@ -274,6 +284,7 @@ export default function JournalPage() {
         entry={editEntry}
         onSave={handleSave}
         saving={saving}
+        availableTags={availableTags}
       />
     </div>
   );

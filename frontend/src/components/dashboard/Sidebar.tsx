@@ -1,16 +1,17 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, SmilePlus, BookOpen, Bot,
-  CheckSquare, BarChart3, User, LogOut, X, Sparkles,
+  BarChart3, User, LogOut, X, Sparkles,
 } from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
+import { useTheme } from "../../hooks/useTheme";
 
 const NAV = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
   { label: "Mood Tracker", icon: SmilePlus, to: "/mood" },
   { label: "Journal", icon: BookOpen, to: "/journal" },
   { label: "AI Companion", icon: Bot, to: "/chat" },
-  { label: "Habits", icon: CheckSquare, to: "/habits" },
   { label: "Analytics", icon: BarChart3, to: "/analytics" },
   { label: "Profile", icon: User, to: "/profile" },
 ];
@@ -18,26 +19,27 @@ const NAV = [
 interface Props { open: boolean; onClose: () => void; }
 
 function SidebarContent({ onClose }: { onClose: () => void }) {
-  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    logout();
   };
 
   return (
-    <div className="flex flex-col h-full bg-white border-r border-slate-100">
+    <div className="flex flex-col h-full bg-white dark:bg-dark-bg-sec border-r border-slate-100 dark:border-dark-border">
       {/* Logo */}
       <div className="px-5 pt-6 pb-7 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-200">
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-200 dark:shadow-none">
             <span className="text-base leading-none">🌸</span>
           </div>
-          <span className="text-lg font-bold text-slate-900 font-[Sora,sans-serif] tracking-tight">Serena</span>
+          <span className="text-lg font-bold text-slate-900 dark:text-white font-[Sora,sans-serif] tracking-tight">Serena</span>
         </div>
         <button
           onClick={onClose}
-          className="lg:hidden p-1.5 rounded-xl hover:bg-violet-50 text-slate-400 hover:text-violet-600 transition-colors"
+          className="lg:hidden p-1.5 rounded-xl hover:bg-violet-50 dark:hover:bg-dark-lavender/10 text-slate-400 hover:text-violet-600 dark:hover:text-dark-lavender transition-colors"
         >
           <X size={17} />
         </button>
@@ -45,7 +47,7 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
 
       {/* Nav label */}
       <div className="px-5 mb-2">
-        <span className="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">Menu</span>
+        <span className="text-[10px] font-semibold tracking-widest text-slate-400 dark:text-slate-500 uppercase">Menu</span>
       </div>
 
       {/* Nav */}
@@ -56,10 +58,10 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
             to={to}
             onClick={() => window.innerWidth < 1024 && onClose()}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all duration-200 group ${
+              `flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all duration-200 group cursor-pointer ${
                 isActive
-                  ? "bg-violet-600 text-white shadow-md shadow-violet-200/60"
-                  : "text-slate-500 hover:bg-violet-50 hover:text-violet-700"
+                  ? "bg-violet-600 text-white shadow-md shadow-violet-200/60 dark:bg-dark-lavender dark:text-black dark:shadow-none"
+                  : "text-slate-500 hover:bg-violet-50 hover:text-violet-700 dark:text-slate-400 dark:hover:bg-dark-lavender/10 dark:hover:text-dark-lavender"
               }`
             }
           >
@@ -67,11 +69,11 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
               <>
                 <Icon
                   size={17}
-                  className={isActive ? "text-white" : "text-slate-400 group-hover:text-violet-500 transition-colors"}
+                  className={isActive ? "text-white dark:text-black" : "text-slate-400 dark:text-slate-500 group-hover:text-violet-500 dark:group-hover:text-dark-lavender transition-colors"}
                 />
                 {label}
                 {label === "AI Companion" && (
-                  <span className="ml-auto flex items-center gap-1 bg-violet-100 text-violet-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  <span className="ml-auto flex items-center gap-1 bg-violet-100 dark:bg-dark-lavender/10 text-violet-600 dark:text-dark-lavender text-[10px] font-bold px-2 py-0.5 rounded-full">
                     <Sparkles size={9} />AI
                   </span>
                 )}
@@ -84,24 +86,32 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
       {/* Bottom */}
       <div className="px-3 py-5">
         {/* Upgrade prompt */}
-        <div className="mb-4 p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
+        <div className={`mb-4 p-4 rounded-2xl border transition-all ${
+          isDark
+            ? "bg-dark-card-el/40 border-dark-border"
+            : "bg-gradient-to-br from-violet-50 to-purple-50 border-violet-100"
+        }`}>
           <div className="flex items-center gap-2 mb-1.5">
-            <Sparkles size={14} className="text-violet-500" />
-            <span className="text-xs font-semibold text-violet-700">Pro plan</span>
+            <Sparkles size={14} className={isDark ? "text-dark-lavender" : "text-violet-500"} />
+            <span className={`text-xs font-semibold ${isDark ? "text-dark-lavender" : "text-violet-700"}`}>Pro plan</span>
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed mb-3">Unlock unlimited AI chats and advanced analytics.</p>
-          <button className="w-full py-2 rounded-xl bg-violet-600 text-white text-xs font-semibold hover:bg-violet-700 transition-colors">
+          <p className={`text-xs leading-relaxed mb-3 ${isDark ? "text-slate-400" : "text-slate-500"}`}>Unlock unlimited AI chats and advanced analytics.</p>
+          <button className={`w-full py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+            isDark
+              ? "bg-dark-lavender text-black hover:bg-dark-lavender-hover"
+              : "bg-violet-600 text-white hover:bg-violet-700"
+          }`}>
             Upgrade
           </button>
         </div>
 
-        <div className="h-px bg-slate-100 mb-3" />
+        <div className="h-px bg-slate-100 dark:bg-dark-border mb-3" />
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-500 transition-all group"
+          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-500 dark:hover:text-red-400 transition-all group cursor-pointer"
         >
-          <LogOut size={16} className="text-slate-400 group-hover:text-red-400 transition-colors" />
+          <LogOut size={16} className="text-slate-400 dark:text-slate-500 group-hover:text-red-400 transition-colors" />
           Sign out
         </button>
       </div>

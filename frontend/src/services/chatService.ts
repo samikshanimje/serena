@@ -20,3 +20,10 @@ export const getChats = (token: string) =>
       Authorization: `Bearer ${token}`,
     },
   });
+
+export const clearChats = (token: string) =>
+  api.delete("/chat", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });

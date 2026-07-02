@@ -137,3 +137,18 @@ export const getChats = async (req, res) => {
     });
   }
 };
+
+export const clearChats = async (req, res) => {
+  try {
+    await Chat.deleteMany({ user: req.user.id });
+    res.json({
+      success: true,
+      message: "Conversation history cleared successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};

@@ -10,9 +10,10 @@ interface Props {
   entry?: JournalEntry | null;       // null = new entry
   onSave: (data: { title: string; content: string; mood?: string; tags: string[] }) => Promise<void>;
   saving: boolean;
+  availableTags?: string[];
 }
 
-export default function JournalModal({ open, onClose, entry, onSave, saving }: Props) {
+export default function JournalModal({ open, onClose, entry, onSave, saving, availableTags }: Props) {
   // Close on Escape
   useEffect(() => {
     if (!open) return;
@@ -84,6 +85,7 @@ export default function JournalModal({ open, onClose, entry, onSave, saving }: P
                 initial={entry}
                 onSave={onSave}
                 saving={saving}
+                availableTags={availableTags}
               />
             </div>
           </motion.div>

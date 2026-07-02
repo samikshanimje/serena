@@ -42,9 +42,9 @@ export default function MoodPage() {
     <div className="min-h-screen bg-slate-50">
       {/* Ambient background gradients */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-violet-200/25 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-[450px] w-[450px] rounded-full bg-purple-200/20 blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pink-100/20 blur-3xl" />
+        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-violet-200/25 dark:bg-dark-lavender/8 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-[450px] w-[450px] rounded-full bg-purple-200/20 dark:bg-dark-lavender-sec/6 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pink-100/20 dark:bg-dark-lavender/4 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-8 space-y-6">

@@ -24,9 +24,11 @@ interface Props {
   onDelete:   (id: string) => void;
   onPin:      (id: string, pinned: boolean) => void;
   onFavorite: (id: string, fav: boolean) => void;
+  selectedId?: string | null;
+  onSelect?: (entry: JournalEntry) => void;
 }
 
-export default function JournalTimeline({ entries, onEdit, onDelete, onPin, onFavorite }: Props) {
+export default function JournalTimeline({ entries, onEdit, onDelete, onPin, onFavorite, selectedId, onSelect }: Props) {
   const groups = groupByDate(entries);
   let cardIndex = 0;
 
@@ -66,6 +68,8 @@ export default function JournalTimeline({ entries, onEdit, onDelete, onPin, onFa
                   onDelete={onDelete}
                   onPin={onPin}
                   onFavorite={onFavorite}
+                  isSelected={entry._id === selectedId}
+                  onSelect={onSelect}
                 />
               );
             })}

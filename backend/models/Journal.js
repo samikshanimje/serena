@@ -32,6 +32,26 @@ const journalSchema = new mongoose.Schema(
       recommendation: String,
       positiveMoments: [String],
       concerns: [String],
+      positiveSignals: [String],
+      recommendedActivity: String,
+      reflection: String,
+      wellnessTip: String,
+      encouragement: String,
+    },
+
+    tags: {
+      type: [String],
+      default: [],
+    },
+
+    pinned: {
+      type: Boolean,
+      default: false,
+    },
+
+    favorite: {
+      type: Boolean,
+      default: false,
     },
   },
   {

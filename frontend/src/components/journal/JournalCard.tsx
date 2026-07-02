@@ -39,9 +39,11 @@ interface Props {
   onPin:      (id: string, pinned: boolean) => void;
   onFavorite: (id: string, fav: boolean) => void;
   index?: number;
+  isSelected?: boolean;
+  onSelect?: (entry: JournalEntry) => void;
 }
 
-export default function JournalCard({ entry, onEdit, onDelete, onPin, onFavorite, index = 0 }: Props) {
+export default function JournalCard({ entry, onEdit, onDelete, onPin, onFavorite, index = 0, isSelected = false, onSelect }: Props) {
   const [menuOpen,   setMenuOpen]   = useState(false);
   const [confirmDel, setConfirmDel] = useState(false);
 
@@ -55,8 +57,9 @@ export default function JournalCard({ entry, onEdit, onDelete, onPin, onFavorite
       exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.2 } }}
       transition={{ delay: index * 0.05, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className={`group relative rounded-3xl border bg-white p-6 shadow-sm hover:shadow-xl hover:shadow-violet-100/50 transition-all ${
-        entry.pinned ? "border-violet-200 ring-1 ring-violet-200/50" : "border-slate-100"
+      onClick={() => onSelect?.(entry)}
+      className={`group relative rounded-3xl border bg-white p-6 shadow-sm hover:shadow-xl hover:shadow-violet-100/50 transition-all cursor-pointer ${
+        isSelected ? "border-violet-500 ring-2 ring-violet-500/10" : entry.pinned ? "border-violet-200 ring-1 ring-violet-200/50" : "border-slate-100"
       }`}
     >
       {/* Pin ribbon */}
