@@ -112,6 +112,5 @@ cd serena
 
 ## 👩‍💻 Developer
 
-**Samiksha Nimje**  
-*Computer Science & Design Engineer*  
+**Samiksha Nimje**    
 Built with ❤️ using React, Express, MongoDB, and AI.
